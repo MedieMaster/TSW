@@ -1,0 +1,77 @@
+import java.awt.Color;
+import java.awt.Component;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+
+public class CellRenderer extends JLabel implements ListCellRenderer<Medium>{
+
+	@Override
+	public Component getListCellRendererComponent(JList<? extends Medium> list, Medium value, int index,
+			boolean isSelected, boolean cellHasFocus) {
+		
+		String text = new String();
+		
+		this.setBorder(BorderFactory.createLineBorder(Color.black));
+		
+		if(isSelected) {
+			this.setBackground(Color.GRAY);
+		}
+		else {
+			this.setBackground(Color.WHITE);
+		}
+		
+		this.setOpaque(true);
+		
+		text = "<HTML><Body>Name: " + value.getName() 
+		+ "<br>Dateigröße: " + value.getDateiGroesse() 
+		+ "<br>Dateiformat: " + value.getDateiFormat() 
+		+ "<br>Speicherort: " + value.getSpeicherOrt()
+		+ "<br>Datum/Uhrzeit: " + value.getErstellungsDatumZeit();
+		
+		if(value instanceof Foto) {
+			Foto f = (Foto)value;
+			text = ("<HTML><Body>Person: " + f.getPersonen()
+			+ "<br>Aufnahmeort: " + f.getAufnahmeOrt()
+			+ "<br>X-Auflösung: " + f.getAufloesungX()
+			+ "<br>Y-Auflösung: " + f.getAufloesungY());
+		}
+		if(value instanceof Film) {
+			Film f = (Film)value;
+			this.setText("<HTML><Body>Person: " + f.getDauer()
+			+ "<br>Aufnahmeort: " + f.getWiederholungsrate()
+			+ "<br>X-Auflösung: " + f.getAufloesungX()
+			+ "<br>Y-Auflösung: " + f.getAufloesungY()
+			+ "<br>Kodierung: " + f.getKodierung()
+			+ "<br>Sprachen: " + f.getSprachen()
+			+ "<br>Kategorie: " + f.getKategorie()
+			+ "<br>Beschreibung: " + f.getBeschreibung()
+			+ "<br>Regisseur: " + f.getRegisseur()
+			+ "<br>Unterkategorie: " + f.getUnterkategorie()
+			+ "<br>Schauspieler: " + f.getSchauspieler()
+			+ "<br>Imdb: " + f.getImdb()
+			+ "<br>Untertitel: " + f.getSprachenUntertitel());
+		}
+		if(value instanceof Video) {
+			Video v = (Video)value;
+			this.setText("<HTML><Body>Person: " + v.getDauer()
+			+ "<br>Aufnahmeort: " + v.getWiederholungsrate()
+			+ "<br>X-Auflösung: " + v.getAufloesungX()
+			+ "<br>Y-Auflösung: " + v.getAufloesungY()
+			+ "<br>Kodierung: " + v.getKodierung());
+		}
+		if(value instanceof Musiktitel) {
+			Musiktitel m = (Musiktitel)value;
+			this.setText("<HTML><Body>Künstler: " + m.getKuenstler()
+			+ "<br>Dauer: " + m.getDauer()
+			+ "<br>Bitrate: " + m.getBitRate());
+		}
+		
+		return this;
+	}
+	
+	
+
+}

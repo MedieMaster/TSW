@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="Anfang/src"/>
+	<classpathentry kind="src" path="Excpections/src"/>
+	<classpathentry kind="src" path="Fahrzeug/src"/>
+	<classpathentry kind="src" path="GUI/src"/>
+	<classpathentry kind="src" path="Klassen/src"/>
+	<classpathentry kind="src" path="KundenListe/src"/>
+	<classpathentry kind="src" path="Medienverwaltung/src"/>
+	<classpathentry kind="src" path="Medium/src"/>
+	<classpathentry kind="src" path="mehr_als_nur_eine_Klasse/src"/>
+	<classpathentry kind="src" path="Methoden/src"/>
+	<classpathentry kind="src" path="Online_Shop/src"/>
+	<classpathentry kind="src" path="Personalverwaltung/src"/>
+	<classpathentry kind="src" path="Sudoku/src"/>
+	<classpathentry kind="src" path="Taschenrechner/src"/>
+	<classpathentry kind="src" path="Vererbung/src"/>
+	<classpathentry kind="output" path="Anfang/bin"/>
+</classpath>

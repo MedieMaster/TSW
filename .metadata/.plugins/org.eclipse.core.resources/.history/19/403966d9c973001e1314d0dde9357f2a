@@ -1,0 +1,129 @@
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.LinkedList;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+public class PersonalGUI {
+
+	private MitarbeiterListe mitarbeiterliste;
+	private String bereich;
+	
+	
+	public PersonalGUI(MitarbeiterListe mitarbeiterliste) {
+		this.mitarbeiterliste = mitarbeiterliste; 
+	}
+	
+	public void start() {
+		
+		JFrame frame = new JFrame("Mitarbeiter");
+		JPanel p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 0));
+		JPanel p3 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		JPanel p4 = new JPanel();
+		Box b = new Box(BoxLayout.Y_AXIS);
+		JLabel label = new JLabel("Bereich:");
+		JLabel alter = new JLabel("Alter:");
+		JLabel bis = new JLabel("bis");	
+		JButton entwicklung = new JButton("Enwicklung");
+		JButton verwaltung = new JButton("Verwaltung");
+		JButton marketing = new JButton("Marketing");
+		JButton suchen = new JButton("Suchen");
+		JTextField alterVon = new JTextField(4);
+		JTextField alterBis = new JTextField(4);
+		JTextArea area = new JTextArea(8, 60);
+		JScrollPane scroll = new JScrollPane(area);
+		
+		frame.setSize(650, 300);
+		
+		entwicklung.setPreferredSize(40, 40);
+		
+		entwicklung.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				bereich = "Entwicklung";
+				label.setText("Bereich: Entwicklung");
+				
+			}
+		});
+		
+		verwaltung.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				bereich = "Verwaltung";
+				label.setText("Bereich: Verwaltung");
+				
+			}
+		});
+		
+		marketing.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				bereich = "Marketing";
+				label.setText("Bereich: Marketing");
+				
+			}
+		});
+		
+		suchen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if(bereich == null) {
+						area.setText("Bitte wählen Sie einen Bereich aus");
+					}
+					else {
+						if(Integer.parseInt(alterBis.getText()) < Integer.parseInt(alterVon.getText())) {
+							area.setText("Der Altersbereich ist ungültig");
+						}
+						else {
+							LinkedList<Mitarbeiter> liste = mitarbeiterliste.suchen(bereich, Integer.parseInt(alterVon.getText()), Integer.parseInt(alterBis.getText()));
+							
+							System.out.println(liste.size());
+						
+							for(int i=0; i<liste.size(); i++) {
+								area.append(liste.get(i).toString() + "\n");
+							
+							}
+						}
+						
+					}
+				}catch(NumberFormatException nf) {
+					area.setText("Sie können nur Zahlen eingeben");
+				}
+				
+			}
+		});
+		
+		
+		
+		p1.add(label);
+		p2.add(entwicklung);
+		p2.add(verwaltung);
+		p2.add(marketing);
+		p3.add(alter);
+		p3.add(alterVon);
+		p3.add(bis);
+		p3.add(alterBis);
+		p3.add(suchen);
+		p4.add(scroll);
+		
+		b.add(p1);
+		b.add(p2);
+		b.add(p3);
+		b.add(p4);
+		
+		frame.add(b);
+		frame.setVisible(true);
+		
+	}
+		
+}

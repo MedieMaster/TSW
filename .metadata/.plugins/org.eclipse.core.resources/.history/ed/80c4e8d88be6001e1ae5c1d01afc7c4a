@@ -1,0 +1,164 @@
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+
+public class SucheGUI {
+
+	private Medienverwaltung mv;
+	private List<Medium> m = new ArrayList<Medium>();
+	
+	public SucheGUI(Medienverwaltung mv) {
+		this.mv = mv;
+	}
+	
+	public Component getGUI() {
+	
+		Font font = new Font("Arial", Font.PLAIN, 30);
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		JPanel p1 = new JPanel(new BorderLayout());
+		JPanel p2 = new JPanel(new BorderLayout());
+		JPanel p3 = new JPanel(new GridLayout(4,1, 0, 10));
+		JPanel p4 = new JPanel(new BorderLayout());
+		JLabel name = new JLabel("Name: ");
+		JTextField tf = new JTextField(19);
+		JButton suchen = new JButton("Suchen");
+		JButton loeschen = new JButton("Löschen");
+		JButton hinzufuegen = new JButton("Hinzufügen");
+		JList<Medium> list = new JList<Medium>();
+		JLabel invis = new JLabel();
+		String[] cString = {"Alle", "Bilder", "Video", "Musik"};
+		JComboBox<String> cbox = new JComboBox<String>(cString);
+		
+		loeschen.setEnabled(false);
+		hinzufuegen.setEnabled(false);
+		
+		suchen.addActionListener(e -> {
+			
+			m = mv.suchen(tf.getText(), cbox.getSelectedIndex());	
+			Medium[] ma = m.toArray(new Medium[0]);
+			
+			list.setCellRenderer(new CellRenderer());
+			list.setListData(ma);
+			
+			tf.setText("");
+			
+		});
+		
+		loeschen.addActionListener(e -> {
+			
+			mv.deleteMedium(m.get(list.getSelectedIndex()));
+			
+			m.remove(list.getSelectedIndex());
+			
+			String[] ausgabe = new String[m.size()];
+			
+			for(int i=0; i<m.size(); i++) {
+				if(m.get(i) instanceof Foto) {
+					Foto f = (Foto)m.get(i);
+					ausgabe[i] = "<HTML><Body>Name: " + f.getName() + "<br>Dateigröße: " + f.getDateiGroesse() + "<br>Format: " + 
+					f.getDateiFormat() + "<br>Speicherort: " + f.getSpeicherOrt() + "<br>Datum/Uhrzeit: " + f.getErstellungsDatumZeit() + 
+					"<br>Personen: " + f.getPersonen() + "<br>Aufnahmeort: " + f.getAufnahmeOrt() + "<br>x-Auflösung: " + f.getAufloesungX() + 
+					"<br>Y-Auflösung: " + f.getAufloesungY() + "</body></HTML>";
+				}
+				else if(m.get(i) instanceof Video) {
+					Video v = (Video)m.get(i);
+					ausgabe[i] = "<HTML><Body>Name: " + v.getName() + "<br>Dateigröße: " + v.getDateiGroesse() + "<br>Format: " + 
+					v.getDateiFormat() + "<br>Speicherort: " + v.getSpeicherOrt() + "<br>Datum/Uhrzeit: " + v.getErstellungsDatumZeit() + 
+					"<br>Dauer: " + v.getDauer() + "<br>Wiederholungsrate: " + v.getWiederholungsrate() + "<br>x-Auflösung: " + v.getAufloesungX() + 
+					"<br>Y-Auflösung: " + v.getAufloesungY() + "<br>Kodierung: " + v.getKodierung() + "</body></HTML>";				
+				}
+				else if(m.get(i) instanceof Film) {
+					Film fi = (Film)m.get(i);
+					ausgabe[i] = "<HTML><Body>Name: " + fi.getName() + "<br>Dateigröße: " + fi.getDateiGroesse() + "<br>Format: " + 
+					fi.getDateiFormat() + "<br>Speicherort: " + fi.getSpeicherOrt() + "<br>Datum/Uhrzeit: " + fi.getErstellungsDatumZeit() + 
+					"<br>Dauer: " + fi.getDauer() + "<br>Wiederholungsrate: " + fi.getWiederholungsrate() + "<br>x-Auflösung: " + fi.getAufloesungX() + 
+					"<br>Y-Auflösung: " + fi.getAufloesungY() + "<br>Kodierung: " + fi.getKodierung() + "<br>Sprachen: " + fi.getSprachen() + 
+					"<br>Kategorie: " + fi.getKategorie() + "<br>Beschreibung: " + fi.getBeschreibung() + "<br>Regisseur: " + fi.getRegisseur() + 
+					"<br>Unterkategorie: " + fi.getUnterkategorie() + "<br>Schauspieler: " + fi.getSchauspieler() + "<br>Imdb: " + 
+					fi.getImdb() + "<br>Untertitel: " + fi.getSprachenUntertitel() + "</body></HTML>";
+				}
+				else if(m.get(i) instanceof Musiktitel) {
+					Musiktitel mu = (Musiktitel)m.get(i);
+					ausgabe[i] = "<HTML><Body>Name: " + mu.getName() + "<br>Dateigröße: " + mu.getDateiGroesse() + "<br>Format: " + 
+					mu.getDateiFormat() + "<br>Speicherort: " + mu.getSpeicherOrt() + "<br>Datum/Uhrzeit: " + mu.getErstellungsDatumZeit() + 
+					"<br>Künstler: " + mu.getKuenstler() + "<br>Album: " + mu.getAlbum() + "<br>Dauer: " + mu.getDauer() + 
+					"<br>Bitrate: " + mu.getBitRate() + "<br>Genre: " + mu.getGenre() + "</body></HTML>";
+				}
+			}
+			
+			list.setCellRenderer(new CellRenderer());
+		});
+		
+		hinzufuegen.addActionListener(e ->{
+			List<Playlist> plist = mv.getPlaylistenListe();
+			JList<String> playlist = new JList<String>();
+			String[] play1 = new String[plist.size()];
+			playlist.setListData(play1);
+			JOptionPane op = new JOptionPane();
+			
+			for(int i=0; i<plist.size(); i++) {
+				play1[i] = plist.get(i).getTitle();
+			}
+			playlist.setListData(play1);
+
+			op.showMessageDialog(null, playlist);	
+			
+			plist.get(playlist.getSelectedIndex()).add(m.get(list.getSelectedIndex()));
+		
+			
+			
+		});
+		
+		list.addListSelectionListener(e ->{
+			
+			if(list.isSelectionEmpty()) {
+				loeschen.setEnabled(false);
+				hinzufuegen.setEnabled(false);
+			}
+			else {
+				loeschen.setEnabled(true);
+				hinzufuegen.setEnabled(true);
+			}
+			
+		});
+		
+		
+		name.setFont(font);
+		tf.setFont(font);
+		
+		p1.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		p2.setBorder(BorderFactory.createEmptyBorder(0,10,10,10));
+		p4.setBorder(BorderFactory.createEmptyBorder(0,0,0,20));
+		JScrollPane scroll = new JScrollPane(list);
+		
+		p1.add(name, BorderLayout.LINE_START);
+		p1.add(tf, BorderLayout.CENTER);
+		p3.add(suchen);
+		p3.add(loeschen);
+		p3.add(hinzufuegen);
+		p3.add(cbox);
+		p4.add(p3, BorderLayout.PAGE_START);
+		p4.add(invis, BorderLayout.CENTER);
+		p2.add(scroll, BorderLayout.CENTER);
+		p2.add(p4, BorderLayout.WEST);
+		mainPanel.add(p1, BorderLayout.PAGE_START);
+		mainPanel.add(p2, BorderLayout.CENTER);
+		
+		return mainPanel;
+		
+	}
+	
+}

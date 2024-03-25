@@ -1,0 +1,43 @@
+import java.util.LinkedList;
+
+public class MitarbeiterListe {
+
+	LinkedList<Mitarbeiter> liste;
+	
+	public MitarbeiterListe() {
+		
+		liste = new LinkedList<Mitarbeiter>();
+		
+	}
+	
+	public LinkedList<Mitarbeiter> suchen(String bereich, int alterVon, int alterBis) {
+		
+		LinkedList<Mitarbeiter> list = new LinkedList<Mitarbeiter>();
+		
+		for(int i=0; i<liste.size(); i++) {
+			
+			Mitarbeiter b = liste.get(i);
+			
+			if(bereich.equalsIgnoreCase(b.getBereich())) {
+				
+				if(alterVon <= b.getAlter() && alterBis >= b.getAlter()) {
+					
+					list.add(b);
+					
+				}
+				
+			}
+			
+		}
+		
+		return list;
+		
+	}
+	
+	public void add(Mitarbeiter mitarbeiter) {
+		
+		liste.add(mitarbeiter);
+		
+	}
+	
+}

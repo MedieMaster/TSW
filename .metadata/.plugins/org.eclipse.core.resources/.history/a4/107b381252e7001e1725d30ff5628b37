@@ -1,0 +1,164 @@
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.util.Date;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+
+public class PlaylistGUI {
+	
+	private Medienverwaltung mv;
+	
+	public PlaylistGUI(Medienverwaltung mv) {
+		this.mv = mv;
+	}
+
+	public Component getGUI() {
+		
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		JPanel left = new JPanel(new GridLayout(2, 1));
+		JPanel right = new JPanel(new GridLayout(2, 1, 0 , 5));
+		JPanel buttonTop = new JPanel(new BorderLayout());
+		JPanel buttonBottom = new JPanel(new BorderLayout());
+		JPanel btop = new JPanel(new GridLayout(3, 1, 0, 10));
+		JPanel bbottom = new JPanel(new GridLayout(2, 1, 0, 10));
+		JPanel current = new JPanel(new BorderLayout());
+		JPanel invis1 = new JPanel();
+		JPanel invis2 = new JPanel();
+		JList<String> playlist = new JList<String>();
+		JList<String> medienlist = new JList<String>();
+		JLabel l1 = new JLabel("Aktuelle Playlist:");
+		JButton erstellen = new JButton("Erstellen");
+		JButton loeschen = new JButton("Löschen");
+		JToggleButton favorit = new JToggleButton("Favorit");
+		JButton entfernen = new JButton("Entfernen");
+		JButton oeffnen = new JButton("Öffnen");
+		Font font = new Font("Arial", Font.PLAIN, 25);
+		
+		loadData(playlist);
+		
+		erstellen.addActionListener(e ->{
+			JOptionPane op = new JOptionPane();
+
+			String label = op.showInputDialog("Name:");
+			
+			Playlist play1 = new Playlist(label, new Date());
+			
+			mv.addPlaylist(play1);
+		
+			loadData(playlist);
+			
+		});
+		
+		loeschen.addActionListener(e ->{
+			
+			mv.deletePlaylist(mv.getPlaylistenListe().get(playlist.getSelectedIndex()));
+			
+			loadData(playlist);
+			
+		});
+		
+		favorit.addActionListener(e ->{
+			if(favorit.isSelected()) {
+				mv.getPlaylistenListe().get(playlist.getSelectedIndex()).setFavorit(true);
+			}
+			else {
+				mv.getPlaylistenListe().get(playlist.getSelectedIndex()).setFavorit(false);
+			}
+			
+		});
+		
+		playlist.addListSelectionListener(e ->{
+			
+			try {
+				if(mv.getPlaylistenListe().get(playlist.getSelectedIndex()).isFavorit()) {
+					favorit.setSelected(true);
+				}
+				else {
+					favorit.setSelected(false);
+				}
+			}catch(IndexOutOfBoundsException ie){
+				
+			}
+			
+			
+			
+			int test = mv.getPlaylistenListe().get(playlist.getSelectedIndex()).getLaenge();
+			
+			String[] ausgabe = new String[test];
+			for(int i=0; i < test; i++) {
+				Medium m1 = mv.getPlaylistenListe().get(playlist.getSelectedIndex()).get(i);
+				ausgabe[i] = "<HTML><Body>" + m1.getName() + "</Body></HTML>";
+			}
+			
+			medienlist.setListData(ausgabe);
+		});
+		
+		entfernen.addActionListener(e ->{
+			
+			
+			medienlist.getSelectedIndex();
+			
+		});
+		
+		medienlist.addListSelectionListener(e ->{
+			if(medienlist.isSelectionEmpty()) {
+				
+			}
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		l1.setFont(font);
+		
+		right.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 5));
+		left.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 0));
+		
+		btop.add(erstellen);
+		btop.add(loeschen);
+		btop.add(favorit);
+		bbottom.add(entfernen);
+		bbottom.add(oeffnen);
+		
+		buttonTop.add(btop, BorderLayout.PAGE_START);
+		buttonTop.add(invis1, BorderLayout.CENTER);
+		buttonBottom.add(bbottom, BorderLayout.PAGE_START);
+		buttonBottom.add(invis2, BorderLayout.CENTER);
+		current.add(l1, BorderLayout.PAGE_START);
+		current.add(medienlist, BorderLayout.CENTER);
+		
+		left.add(buttonTop);
+		right.add(playlist);
+		left.add(buttonBottom);
+		right.add(current);
+		
+		mainPanel.add(left, BorderLayout.WEST);
+		mainPanel.add(right, BorderLayout.CENTER);
+		
+		return mainPanel;
+		
+	}
+	private void loadData(JList<String> playlist) {
+		String[] data = new String[mv.getPlaylistenListe().size()];
+		for(int i=0; i<mv.getPlaylistenListe().size(); i++) {
+			data[i] = mv.getPlaylistenListe().get(i).getTitle();
+		}
+		playlist.setListData(data);
+	}
+}
